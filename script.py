@@ -19,6 +19,8 @@ api = tweepy.API(auth, parser=tweepy.parsers.JSONParser())
 name = ''
 body = ''
 timestamp = ''
+location = ''
+new_location = ''
 
 
 #app-specific variables:
@@ -27,7 +29,8 @@ possible_actions = ['new-game','go-left','go-right','forwards','backwards','inve
 
 def new_game(user): # starts new game for new user, or resets current progress for current user.
     print('new game')
-    # set location and progress variables to 0
+    # set location and progress variables to 0?
+    # Respond with standard opening tweet
 
 def add_user(name): # if a new user is found, add them to the database with 0 progress
         cursor.execute("""
@@ -47,7 +50,7 @@ def add_user(name): # if a new user is found, add them to the database with 0 pr
 
             # set progress and location variables to 0:
             cursor.execute("""
-                update users set location='0' where name=?;
+                update users set location='1' where name=?;
                 """, (name,))
             mainDB.commit()
             cursor.execute("update users set 'previously-in-1'='0' where name=?;", (name,))
@@ -77,30 +80,43 @@ def add_user(name): # if a new user is found, add them to the database with 0 pr
 
 
 def take_action(action):
-    pass #remove this
+    global name
+    global location
+    global new_location
+    cursor.execute("select location from users where name=?", (name,))
+    mainDB.commit()
+    location = cursor.fetchall()[0][0]
+    
     if action.lower() == 'go-left':
         pass
-        # current_location = [DB: location var]
-        # new_location = [DB: location var's go-left var]
-        # compose a tweet:
+
+        
+    elif action.lower() == 'go-right':
+        pass
+        
+    elif action.lower() == 'forwards':
+        print('location:',location)
+
+        # TO DO NEXT:
+
+        # a) new_location = location's 'forward' variable, i.e:
+        # cursor.execute('update users set location=? where name=?', (new_location, name))
+        
+        # b) compose a tweet using new_location's text from DB:
             # if first time there, add 'first time' from text text for that room [from storytext.py]
             # either way, add 'room description' text to tweet [from storytext.py]
             # add sentence outlining options 
         # reply to tweet with composed response
-        # modify DB accordingly: update location, set previous visit var to 1, 
         
-    elif action.lower() == 'go-right':
-        pass
-        # see go-left
-    elif action.lower() == 'forwards':
-        pass
-        # see go-left
+        # c) modify DB accordingly: update location, set previous visit var to 1, 
+        
+
     elif action.lower() == 'backwards':
         pass
-        # see go-left
+        
     elif action.lower() == 'investigate':
         pass
-        # see go-left
+        
 
 
 
@@ -119,9 +135,7 @@ def main():
         body = [i][0]['text']
         timestamp = [i][0]['created_at']
         print('\n',name,'\n',body,'\n',timestamp)
-        cursor.execute("""
-        select id from 'Previous_tweets' where user=? and body=? and time=? limit 1
-        """, (name,body,timestamp))
+        cursor.execute("select id from 'Previous_tweets' where user=? and body=? and time=? limit 1", (name,body,timestamp)) # reduced to 1 line; broken now?
         mainDB.commit()
         name_presence = cursor.fetchall()
         print('name presence:',name_presence, len(name_presence))
@@ -132,6 +146,7 @@ def main():
             insert into 'Previous_tweets' (user,body,time) values (?,?,?)""", (name,body,timestamp)) # ... put into DB
             mainDB.commit()
             print('added tweet?\n')
+            # send tweet introducing scenario
         
         # B) Are they already playing the game?
         add_user(name) # Run this whether new or not; existing users are ignored
