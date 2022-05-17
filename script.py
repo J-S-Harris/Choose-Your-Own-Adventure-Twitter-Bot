@@ -16,6 +16,9 @@ auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
 auth.set_access_token(access_token, access_token_secret)
 api = tweepy.API(auth, parser=tweepy.parsers.JSONParser())
 
+name = ''
+body = ''
+timestamp = ''
 
 
 #app-specific variables:
@@ -95,7 +98,7 @@ def take_action(action):
     elif action.lower() == 'backwards':
         pass
         # see go-left
-    elif aciton.lower() == 'investigate':
+    elif action.lower() == 'investigate':
         pass
         # see go-left
 
@@ -104,17 +107,21 @@ def take_action(action):
             
 
 def main():
+    global name
+    global body
+    global timestamp
     all_ats = api.mentions_timeline()
     for i in all_ats: # Looking at all received tweets, check: ....
 
         # ...if tweet NOT IN tweets
+        print('nbt', name, body, timestamp)
         name = [i][0]['user']['screen_name']
         body = [i][0]['text']
-        time = [i][0]['created_at']
-        print('\n',name,'\n',body,'\n',time)
+        timestamp = [i][0]['created_at']
+        print('\n',name,'\n',body,'\n',timestamp)
         cursor.execute("""
         select id from 'Previous_tweets' where user=? and body=? and time=? limit 1
-        """, (name,body,time))
+        """, (name,body,timestamp))
         mainDB.commit()
         name_presence = cursor.fetchall()
         print('name presence:',name_presence, len(name_presence))
@@ -122,7 +129,7 @@ def main():
         # A) ...put the new tweet into the DB:
         if len(name_presence) == 0: # New tweet found! So....
             cursor.execute("""
-            insert into 'Previous_tweets' (user,body,time) values (?,?,?)""", (name,body,time)) # ... put into DB
+            insert into 'Previous_tweets' (user,body,time) values (?,?,?)""", (name,body,timestamp)) # ... put into DB
             mainDB.commit()
             print('added tweet?\n')
         

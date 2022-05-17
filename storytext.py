@@ -1,31 +1,31 @@
 # Placeholder text so far
-1-first-visit = '1fv'
-1-description = '1d'
+firstvisit1 = '1fv'
+description1 = '1d'
 
-2-first-visit = '2fv'
-2-description = '2d'
+firstvisit2 = '2fv'
+description2 = '2d'
 
-3-first-visit = '3fv'
-3-description = '3d'
+firstvisit3 = '3fv'
+description3 = '3d'
 
-4-first-visit = '4fv'
-4-description = '4d'
+firstvisit4 = '4fv'
+description4 = '4d'
 
-5-first-visit = '5fv'
-5-description = '5d'
+firstvisit5 = '5fv'
+description5 = '5d'
 
-6-first-visit = '6fv'
-6-description = '6d'
+firstvisit6 = '6fv'
+description6 = '6d'
 
-7-first-visit = '7fv'
-7-description = '7d'
+firstvisit7 = '7fv'
+description7 = '7d'
 
-8-first-visit = '8fv'
-8-description = '8d'
+firstvisit8 = '8fv'
+description8 = '8d'
 
-9-first-visit = '9fv'
-9-description = '9d'
+firstvisit9 = '9fv'
+description9 = '9d'
 
-10-first-visit = '10fv'
-10-description = '10d'
+firstvisit10 = '10fv'
+description10 = '10d'
 
